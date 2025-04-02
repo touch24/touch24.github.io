@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Wrap Ideas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-container">
+
+        <section class="intro-section">
+            <h1>Gift Wrap Ideas Studio</h1>
+            <p>Describe your gift and preferences to get unique wrapping ideas.</p>
+        </section>
+
+        <section id="generator" class="card">
+            <h2 class="card-header">Tell Us About Your Gift</h2>
+            <!-- Added basic form action/method - won't actually work without a server/JS -->
+            <form id="giftForm" class="gift-form" action="#" method="post">
+                 <div class="form-grid">
+                    <div class="form-group">
+                        <label for="occasion">Occasion:</label>
+                        <input type="text" id="occasion" name="occasion" placeholder="e.g., Birthday, Anniversary">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient">Recipient's Relationship:</label>
+                         <input type="text" id="recipient" name="recipient" placeholder="e.g., Friend, Colleague, Partner">
+                    </div>
+
+                     <div class="form-group">
+                         <label for="giftType">Gift Description:</label>
+                         <input type="text" id="giftType" name="giftType" placeholder="e.g., Scarf, Book Set, Vase">
+                    </div>
+
+                    <div class="form-group">
+                         <label for="giftSize">Gift Size/Shape:</label>
+                         <select id="giftSize" name="giftSize">
+                             <option value="">-- Select --</option>
+                             <option value="Small Box">Small Box</option>
+                             <option value="Medium Box">Medium Box</option>
+                             <option value="Large Box">Large Box</option>
+                             <option value="Bottle">Bottle</option>
+                             <option value="Irregular/Soft">Irregular/Soft</option>
+                             <option value="Flat Envelope">Flat Envelope</option>
+                             <option value="Other">Other</option>
+                         </select>
+                     </div>
+
+                    <div class="form-group">
+                        <label for="recipientStyle">Recipient's General Style:</label>
+                        <select id="recipientStyle" name="recipientStyle">
+                            <option value="">-- Select --</option>
+                            <option value="Modern & Minimalist">Modern & Minimalist</option>
+                            <option value="Elegant & Classic">Elegant & Classic</option>
+                            <option value="Fun & Playful">Fun & Playful</option>
+                            <option value="Rustic & Natural">Rustic & Natural</option>
+                             <option value="Artistic">Artistic</option>
+                             <option value="Sophisticated">Sophisticated</option>
+                             <option value="Neutral">Neutral</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="colorPalette">Preferred Colors:</label>
+                        <input type="text" id="colorPalette" name="colorPalette" placeholder="e.g., Pastels, Neutrals">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="budgetLevel">Budget Level:</label>
+                        <select id="budgetLevel" name="budgetLevel">
+                            <option value="Flexible">Flexible</option>
+                             <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High-End">High-End</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group full-width slider-container">
+                         <label for="complexityLevel">
+                            Wrapping Complexity:
+                            <span id="complexityValue">(Medium)</span> <!-- Static text indicator -->
+                        </label>
+                        <input type="range" id="complexityLevel" name="complexityLevel" min="1" max="5" value="3" step="1">
+                    </div>
+
+                     <div class="form-group full-width">
+                         <label for="availableMaterials">Materials On Hand (Optional):</label>
+                         <textarea id="availableMaterials" name="availableMaterials" placeholder="List anything specific"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                     <button type="submit">Submit Details</button> <!-- Changed button text -->
+                 </div>
+                 <!-- Removed error area -->
+            </form>
+        </section>
+
+        <!-- Removed results section entirely -->
+
+    </div>
+
+    <!-- No script tag -->
+
+</body>
+</html>

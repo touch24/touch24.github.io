@@ -1,0 +1,204 @@
+/* Basic Theme Variables */
+:root {
+    --primary-color: #2E7D32;
+    --secondary-color: #FFB300;
+    --accent-color: #C2185B;
+    --background-color: #f0f2f5; /* Simpler background */
+    --card-bg: #FFFFFF;
+    --text-color: #333;
+    --light-text: #666;
+    --border-color: #ddd;
+    --border-radius: 8px;
+    --box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+/* Layout */
+.main-container {
+    max-width: 700px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.intro-section {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.intro-section h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.intro-section p {
+    font-size: 1rem;
+    color: var(--light-text);
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.card-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--secondary-color);
+    display: inline-block;
+}
+
+/* Form Styles */
+.gift-form .form-grid {
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); /* Adjust minmax */
+     gap: 1.2rem 1.5rem; /* Adjust gap */
+     margin-bottom: 1.5rem;
+ }
+
+.gift-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.gift-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.gift-form input[type="text"],
+.gift-form select,
+.gift-form textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem; /* Slightly smaller padding */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.95rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fafafa; /* Slightly off-white */
+    transition: border-color 0.2s ease;
+}
+
+.gift-form input[type="text"]:focus,
+.gift-form select:focus,
+.gift-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--card-bg);
+}
+.gift-form select {
+     cursor: pointer;
+     appearance: none;
+     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23555' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); /* Smaller arrow */
+     background-repeat: no-repeat;
+     background-position: right 0.8rem center;
+     background-size: 14px 14px;
+     padding-right: 2.5rem; /* Adjust for arrow */
+}
+
+.gift-form textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+.form-group.full-width {
+     grid-column: 1 / -1;
+ }
+
+/* Slider (simplified display) */
+.slider-container {
+    padding: 0.8rem 0;
+    margin-top: 0.5rem;
+}
+
+.slider-container label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+    cursor: pointer;
+    accent-color: var(--accent-color); /* Use browser default styling where possible */
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
+    outline: none;
+}
+
+#complexityValue { /* Simple text display for slider value */
+    font-weight: 500;
+    color: var(--light-text);
+    font-size: 0.9rem;
+}
+
+/* Button */
+.form-actions {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.gift-form button {
+    background-color: var(--primary-color); /* Solid color */
+    color: white;
+    padding: 0.8rem 2rem; /* Adjust padding */
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.gift-form button:hover {
+    background-color: #1E8449; /* Slightly darker shade */
+}
+
+/* No Results Area or Loader styling needed */
+
+/* Basic Responsive */
+@media (max-width: 600px) {
+    body { padding: 1rem; }
+    .card { padding: 1.5rem; }
+    .gift-form .form-grid {
+         grid-template-columns: 1fr; /* Stack early */
+         gap: 1rem;
+     }
+     .intro-section h1 { font-size: 2rem; }
+}
