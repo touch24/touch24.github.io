@@ -4,51 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GiftWrap Genius AI Chat</title>
+    <!-- Link CSS -->
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="light-theme"> <!-- Default theme -->
 
-    <header>
-        <h1><span class="icon">🎁</span> GiftWrap Genius</h1>
-    </header>
+<header>
+    <span class="icon" aria-hidden="true">🎁</span>
+    <h1>GiftWrap Genius</h1>
+</header>
 
-    <div class="main-container">
-        <aside class="sidebar">
-            <div class="sidebar-section">
-                <h3>Quick Actions</h3>
-                <button class="sidebar-button" id="show-tips-button">
-                    <span class="icon">💡</span> <span>Show Tips</span>
-                </button>
-                <button class="sidebar-button secondary" id="inspiration-button">
-                     <span class="icon">🎨</span> <span>Inspiration Links</span>
-                 </button>
-                 <button class="sidebar-button clear" id="clear-chat-button">
-                     <span class="icon">🗑️</span> <span>Clear Chat</span>
-                 </button>
-                 </div>
+<div class="main-container">
+    <aside class="sidebar" role="complementary">
+        <div class="sidebar-section">
+            <h3>Quick Actions</h3>
+            <button class="sidebar-button" id="show-tips-button" title="Get wrapping tips">
+                <span class="icon" aria-hidden="true">💡</span> <span class="button-text">Show Tips</span>
+            </button>
+            <button class="sidebar-button secondary" id="inspiration-button" title="Find wrapping inspiration">
+                 <span class="icon" aria-hidden="true">🎨</span> <span class="button-text">Inspiration</span>
+             </button>
+             <button class="sidebar-button clear" id="clear-chat-button" title="Clear conversation">
+                 <span class="icon" aria-hidden="true">🗑️</span> <span class="button-text">Clear Chat</span>
+             </button>
+        </div>
 
-             <div class="sidebar-section">
-                 <h3>About</h3>
-                 <p style="font-size: 0.9rem; color: var(--text-light);">Your AI assistant for creative gift wrapping ideas. Start chatting to get personalized suggestions!</p>
+         <div class="sidebar-section">
+            <h3>Settings</h3>
+            <button class="sidebar-button theme-toggle" id="theme-toggle-button" title="Toggle light/dark theme">
+                <span class="icon theme-icon" aria-hidden="true">🌙</span> <!-- Icon changes via CSS -->
+                <span class="button-text">Toggle Theme</span>
+            </button>
+        </div>
+
+
+        <div class="sidebar-section sidebar-about">
+             <h3>About</h3>
+             <p>Your AI assistant for creative gift wrapping ideas. Ask me anything or use the prompts!
+                 <br><strong class="api-warning">(Note: API key is exposed client-side for demo purposes only - highly insecure for production.)</strong>
+             </p>
+        </div>
+    </aside>
+
+    <main class="chat-area" role="main" aria-live="polite">
+        <div class="message-display" id="message-display">
+            <!-- Messages will appear here -->
+        </div>
+
+        <!-- Interactive choices will appear here -->
+        <div class="interactive-choices" id="interactive-choices" aria-label="Response options"></div>
+
+        <div id="typing-indicator" class="typing-indicator" style="display: none;" aria-label="AI is typing">
+             <span>Wrapping up a response...</span>
+             <div class="dots"><span></span><span></span><span></span></div>
+         </div>
+
+        <div class="input-area-container" role="form" aria-label="Chat input form">
+             <div class="starter-prompts" id="starter-prompts" aria-label="Example prompts">
+                 <!-- Starter prompts will be added here by JS -->
              </div>
-             <div id="sidebar-output" style="font-size: 0.85rem; color: var(--text-light); margin-top: auto;">
-                 </div>
-        </aside>
-
-        <main class="chat-area">
-            <div class="message-display" id="message-display">
-                </div>
-            <div id="typing-indicator" class="typing-indicator" style="display: none;">
-                 AI is thinking...
-                <span></span><span></span><span></span>
-             </div>
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="Type your message here...">
-                <button id="send-button">Send</button>
+             <div class="input-area">
+                 <input type="text" id="user-input" placeholder="Ask for wrapping ideas..." aria-label="Type your message here">
+                 <button id="send-button" title="Send Message" aria-label="Send Message">
+                     <span class="icon" aria-hidden="true">➤</span>
+                 </button>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
+</div>
 
-    <script src="script.js"></script>
-    </body>
+<!-- Link JavaScript -->
+<script src="script.js"></script>
+
+</body>
 </html>
