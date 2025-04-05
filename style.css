@@ -1,16 +1,22 @@
-/* Basic Theme Variables */
+/* --- Global Styles & Variables --- */
 :root {
-    --primary-color: #2E7D32;
-    --secondary-color: #FFB300;
-    --accent-color: #C2185B;
-    --background-color: #f0f2f5; /* Simpler background */
-    --card-bg: #FFFFFF;
-    --text-color: #333;
-    --light-text: #666;
-    --border-color: #ddd;
-    --border-radius: 8px;
-    --box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
+    --primary-color: #8b5cf6; /* Slightly different Purple */
+    --secondary-color: #db2777; /* Slightly different Pink */
+    --accent-color: #f59e0b; /* Amber */
+    --bg-color: #f5f3ff; /* Lighter Purple BG */
+    --sidebar-bg: #ede9fe;
+    --chat-bg: #ffffff;
+    --user-bubble-bg: #e0e7ff; /* Light blue/indigo */
+    --ai-bubble-bg: #f3e8ff; /* Light purple */
+    --text-color: #1f2937; /* Darker Gray */
+    --text-light: #6b7280;
+    --border-color: #d1d5db;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* Add dark mode variables if implementing theme switch */
 
 * {
     box-sizing: border-box;
@@ -19,186 +25,282 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    background-color: var(--background-color);
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
     color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-}
-
-/* Layout */
-.main-container {
-    max-width: 700px;
-    width: 100%;
+    line-height: 1.6;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    min-height: 100vh;
+    overflow: hidden; /* Prevent body scroll */
 }
 
-.intro-section {
+/* --- Header --- */
+header {
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 1rem 1.5rem;
     text-align: center;
-    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-.intro-section h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
+header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 10px;
+}
+ header h1 .icon {
+    font-size: 1.5rem; /* Adjust icon size */
+ }
+
+/* --- Main Layout (Sidebar + Chat) --- */
+.main-container {
+    display: flex;
+    flex-grow: 1;
+    height: calc(100vh - 60px); /* Full height minus header */
+    overflow: hidden;
 }
 
-.intro-section p {
-    font-size: 1rem;
-    color: var(--light-text);
-    max-width: 550px;
-    margin: 0 auto;
+/* --- Sidebar --- */
+.sidebar {
+    width: 280px;
+    background-color: var(--sidebar-bg);
+    padding: 1.5rem;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+     transition: width 0.3s ease;
 }
 
-/* Card Styles */
-.card {
-    background-color: var(--card-bg);
-    padding: 2rem;
+.sidebar-section {
+    background-color: var(--chat-bg);
+    padding: 1rem;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    border: 1px solid var(--border-color);
 }
 
-.card-header {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
+.sidebar-section h3 {
     color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
     border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 0.3rem;
     display: inline-block;
 }
 
-/* Form Styles */
-.gift-form .form-grid {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); /* Adjust minmax */
-     gap: 1.2rem 1.5rem; /* Adjust gap */
-     margin-bottom: 1.5rem;
+.sidebar-button {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.sidebar-button:hover {
+    background-color: #7c3aed; /* Darker primary */
+    transform: translateX(3px);
+}
+ .sidebar-button.secondary {
+    background-color: var(--secondary-color);
+ }
+ .sidebar-button.secondary:hover {
+     background-color: #be185d; /* Darker secondary */
+ }
+ .sidebar-button.clear {
+     background-color: #d1d5db;
+     color: var(--text-color);
+ }
+ .sidebar-button.clear:hover {
+      background-color: #9ca3af;
  }
 
-.gift-form .form-group {
+
+/* --- Chat Area --- */
+.chat-area {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: var(--chat-bg);
+    height: 100%; /* Ensure it takes full height */
 }
 
-.gift-form label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    font-size: 0.9rem;
+/* Message Display Area */
+.message-display {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.gift-form input[type="text"],
-.gift-form select,
-.gift-form textarea {
-    width: 100%;
-    padding: 0.7rem 0.9rem; /* Slightly smaller padding */
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    font-size: 0.95rem;
-    font-family: 'Poppins', sans-serif;
-    background-color: #fafafa; /* Slightly off-white */
-    transition: border-color 0.2s ease;
+.chat-bubble {
+    padding: 0.8rem 1.2rem;
+    border-radius: 18px;
+    max-width: 75%;
+    word-wrap: break-word; /* Prevent long words from overflowing */
+     position: relative;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.gift-form input[type="text"]:focus,
-.gift-form select:focus,
-.gift-form textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--card-bg);
-}
-.gift-form select {
-     cursor: pointer;
-     appearance: none;
-     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%23555' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E"); /* Smaller arrow */
-     background-repeat: no-repeat;
-     background-position: right 0.8rem center;
-     background-size: 14px 14px;
-     padding-right: 2.5rem; /* Adjust for arrow */
+.chat-bubble.user {
+    background-color: var(--user-bubble-bg);
+    color: #3730a3; /* Darker indigo text */
+    border-bottom-right-radius: 4px;
+    align-self: flex-end; /* Align user messages to the right */
+    margin-left: auto; /* Push to right */
 }
 
-.gift-form textarea {
-    resize: vertical;
-    min-height: 70px;
+.chat-bubble.ai {
+    background-color: var(--ai-bubble-bg);
+    color: #581c87; /* Darker purple text */
+    border-bottom-left-radius: 4px;
+    align-self: flex-start; /* Align AI messages to the left */
+     margin-right: auto; /* Push to left */
 }
-.form-group.full-width {
-     grid-column: 1 / -1;
+
+ .chat-bubble strong { /* Style bold text from AI */
+     color: var(--primary-color);
+ }
+ .chat-bubble ul {
+     margin-top: 0.5rem;
+     margin-left: 1rem; /* Indent lists */
+     padding-left: 1rem;
+ }
+  .chat-bubble li {
+      margin-bottom: 0.3rem;
+  }
+
+ .typing-indicator {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    color: var(--text-light);
+    font-style: italic;
+ }
+ .typing-indicator span {
+     height: 8px;
+     width: 8px;
+     background-color: var(--primary-color);
+     border-radius: 50%;
+     display: inline-block;
+     margin: 0 2px;
+     animation: bounce 1.4s infinite ease-in-out both;
+ }
+ .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+ .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+ @keyframes bounce {
+   0%, 80%, 100% { transform: scale(0); }
+   40% { transform: scale(1.0); }
  }
 
-/* Slider (simplified display) */
-.slider-container {
-    padding: 0.8rem 0;
-    margin-top: 0.5rem;
-}
 
-.slider-container label {
+/* Input Area */
+.input-area {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.8rem;
-    font-weight: 600;
-    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: #f9fafb; /* Slightly off-white */
 }
 
-.slider-container input[type="range"] {
-    width: 100%;
-    cursor: pointer;
-    accent-color: var(--accent-color); /* Use browser default styling where possible */
-    height: 6px;
-    background: #e0e0e0;
-    border-radius: 3px;
-    outline: none;
-}
-
-#complexityValue { /* Simple text display for slider value */
-    font-weight: 500;
-    color: var(--light-text);
-    font-size: 0.9rem;
-}
-
-/* Button */
-.form-actions {
-    text-align: center;
-    margin-top: 1.5rem;
-}
-
-.gift-form button {
-    background-color: var(--primary-color); /* Solid color */
-    color: white;
-    padding: 0.8rem 2rem; /* Adjust padding */
-    border: none;
-    border-radius: var(--border-radius);
+#user-input {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 20px 0 0 20px; /* Rounded on left */
     font-size: 1rem;
-    font-weight: 600;
+    resize: none; /* Optional: disable textarea resize */
+    height: 44px; /* Match button height */
+     line-height: 1.4;
+}
+ #user-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+ }
+
+
+#send-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0 20px 20px 0; /* Rounded on right */
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.3s ease;
+     height: 44px; /* Match input height */
 }
 
-.gift-form button:hover {
-    background-color: #1E8449; /* Slightly darker shade */
+#send-button:hover {
+    background-color: #7c3aed;
 }
+ #send-button:disabled {
+     background-color: #a78bfa; /* Lighter purple when disabled */
+     cursor: not-allowed;
+ }
 
-/* No Results Area or Loader styling needed */
+/* Footer */
+/* Footer styling can go here if you uncomment the footer HTML */
+/*
+footer {
+     background-color: #e5e7eb;
+     color: var(--text-light);
+     text-align: center;
+     padding: 0.5rem;
+     font-size: 0.8rem;
+     border-top: 1px solid var(--border-color);
+}
+*/
 
-/* Basic Responsive */
-@media (max-width: 600px) {
-    body { padding: 1rem; }
-    .card { padding: 1.5rem; }
-    .gift-form .form-grid {
-         grid-template-columns: 1fr; /* Stack early */
-         gap: 1rem;
+/* Responsive Design */
+@media (max-width: 768px) {
+     .sidebar {
+         width: 60px; /* Collapse sidebar */
+         padding: 1rem 0.5rem;
+         align-items: center; /* Center icons/buttons */
      }
-     .intro-section h1 { font-size: 2rem; }
+      .sidebar-section h3, .sidebar-section p, .sidebar-button span {
+          display: none; /* Hide text in collapsed sidebar */
+      }
+      .sidebar-button {
+           text-align: center;
+           padding: 0.8rem;
+           margin-bottom: 1rem;
+           font-size: 1.2rem; /* Make icons bigger */
+      }
+      .sidebar-button .icon { /* Ensure icon is visible */
+           display: inline-block !important;
+           margin-right: 0 !important;
+      }
+     .chat-area {
+         width: calc(100% - 60px);
+     }
+     header h1 { font-size: 1.5rem; }
+     .message-display { padding: 1rem; }
+     .chat-bubble { max-width: 85%; }
+     .input-area { padding: 0.8rem; }
+     #user-input { padding: 0.6rem 0.8rem; }
+     #send-button { padding: 0.6rem 1rem; }
 }
+ @media (max-width: 480px) {
+    .sidebar { display: none; } /* Completely hide sidebar on very small screens */
+    .chat-area { width: 100%; }
+    header h1 { font-size: 1.3rem; }
+ }
