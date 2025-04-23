@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
      // Added check for the specific placeholder value too
      if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY || API_KEY === "AIzaSyDRUdvRQdrIsWDNkYAKt7PyyHrY-bfhESg") {
         setTimeout(() => {
-             addMessageToDisplay("⚠️ **Action Required:** Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
+             //addMessageToDisplay("⚠️ **Action Required:** Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
          }, 500);
      }
 });
