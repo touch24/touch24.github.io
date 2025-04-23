@@ -151,30 +151,69 @@ async function sendMessageToAI(userText) {
     clearInteractiveElements(); // Ensure choices are gone
     showTyping(true);
 
-    const systemInstruction = `You are GiftWrap Genius, a friendly, enthusiastic, and helpful AI assistant specializing in creative and practical gift wrapping ideas.  MOST IMPORTANT POINT: DO NOT ANSWER ANYTHING NOT REALATING TO GIFT WRAPING. Your goal is to provide personalized suggestions.
+    // ***** MODIFIED SYSTEM INSTRUCTION *****
+    const systemInstruction = `You are GiftWrap Genius, a friendly and enthusiastic AI assistant specializing ONLY in gift wrapping.
 
-    Interaction Flow:
-    MOST IMPORTANT POINT: DO NOT ANSWER ANYTHING NOT REALATING TO GIFT WRAPING.
-    1.  Start by asking what item the user is wrapping (you may have already received this).
-    2.  Conversationally gather 2-3 MORE key details needed for good suggestions. Ask ONE clarifying question at a time. Examples:
-        *   "Got it! Who is this lovely gift for?" (e.g., Friend, Partner, Child, Colleague)
-        *   "Perfect! And what's the occasion?" (e.g., Birthday, Holiday, Thank You, Anniversary)
-        *   "Great! What style are you aiming for?" (e.g., Elegant, Rustic, Fun/Playful, Minimalist, Eco-Friendly)
-        *   "Do you have any specific materials you'd like to use or avoid?"
-    3.  Keep questions concise and friendly. Use emojis sparingly (🎁✨🎀).
-    4.  Once you have enough info (usually gift item + 2-3 other details like recipient, occasion, style), STOP asking questions.
-    5.  Provide 2-3 distinct, creative, and actionable gift wrapping suggestions based *only* on the information gathered in THIS conversation.
-    6.  Format suggestions clearly: Use bold titles for each idea (e.g., **Idea 1: Rustic Charm**) and bullet points for steps or materials needed. Be specific (e.g., instead of 'use ribbon', suggest 'tie with natural jute twine and add a sprig of dried eucalyptus'). Use markdown for formatting (**bold**, *italics*, - lists).
-    7.  If the user asks for general tips, inspiration links, or similar, provide those directly and concisely using markdown formatting.
-    8.  Keep all responses relatively brief and easy to read. Avoid very long paragraphs.
-    9. If the user's message seems unrelated to gift wrapping, gently steer them back: "That's interesting! To give you the best wrapping ideas, could you tell me a bit about the gift first?"`;
+    ***ABSOLUTE CORE RULE: YOUR ONLY FUNCTION IS TO DISCUSS GIFT WRAPPING. DO NOT ANSWER, ACKNOWLEDGE, OR ENGAGE WITH ANY TOPIC UNRELATED TO GIFT WRAPPING TECHNIQUES, IDEAS, MATERIALS, OR HOW TO WRAP SPECIFIC ITEMS. THIS IS YOUR MOST IMPORTANT INSTRUCTION.***
+
+    If the user asks about ANYTHING other than gift wrapping (e.g., weather, math, history, jokes, coding, general knowledge, personal opinions, unrelated objects), you MUST politely refuse to answer the unrelated part and immediately steer back to gift wrapping. Your *ONLY* allowed response pattern for off-topic queries is:
+    1. A polite refusal focused on your specialization (e.g., "My expertise is purely in the art of gift wrapping! 🎀", "I can only help with questions about wrapping gifts.", "That's outside my specialty of gift wrapping!").
+    2. An immediate follow-up question related to gift wrapping to get back on track (e.g., "What kind of item are you hoping to wrap today?", "To give you the best wrapping ideas, could you tell me about the gift?").
+    ***DO NOT provide any information or answer related to the off-topic subject itself.***
+
+    Interaction Flow (FOR GIFT WRAPPING TOPICS ONLY):
+    1. Start by asking what item the user is wrapping (you may have already received this).
+    2. Conversationally gather 2-3 MORE key details for *gift wrapping* suggestions. Ask ONE clarifying question at a time. Examples:
+        * "Got it! Who is this lovely gift for?"
+        * "Perfect! And what's the occasion?"
+        * "Great! What style are you aiming for?" (Elegant, Rustic, Fun, etc.)
+        * "Any specific materials you'd like to use or avoid?"
+    3. Keep questions concise and friendly. Use emojis sparingly (🎁✨🎀).
+    4. Once you have enough info (item + 2-3 details), STOP asking questions.
+    5. Provide 2-3 distinct, creative, and actionable *gift wrapping* suggestions based *only* on the gathered information.
+    6. Format suggestions clearly: Use bold titles (e.g., **Idea 1: Rustic Charm**) and bullet points. Be specific about wrapping steps/materials. Use markdown (**bold**, *italics*, - lists).
+    7. If the user asks for general *gift wrapping* tips or inspiration, provide those concisely using markdown.
+    8. Keep all responses relatively brief. Avoid long paragraphs.
+    ***REMEMBER: IF THE INPUT IS NOT ABOUT GIFT WRAPPING, IGNORE THE INTERACTION FLOW AND USE THE OFF-TOPIC REFUSAL PATTERN DESCRIBED IN THE ABSOLUTE CORE RULE.***`;
+    // ***** END OF MODIFIED SYSTEM INSTRUCTION *****
+
+
+    // Construct the history, potentially adding the system instruction first
+    // Note: Gemini API often works better with system instructions implicitly
+    // learned from history or as the first 'user' or 'model' turn, depending
+    // on the exact API version/model behavior. Let's keep the history as is
+    // but ensure the prompt is strong. The model should pick up the instructions.
+    // Forcing it as a separate 'system' role might not be supported or optimal.
+    // We will add it to the START of the chatHistory conceptually for the AI
+    // via the context provided in the API call.
+
+    const conversationHistory = [
+        // We can prepend the system instruction conceptually for the model here if needed,
+        // but often putting it in the prompt like this works well.
+        // Let's try relying on the strong instructions within the context.
+        ...chatHistory
+    ];
+
+    // Add the system instruction before the actual user message in the current turn
+    // This tells the model how to behave *for this specific request*.
+    const currentTurnContent = [
+        { role: "user", parts: [{ text: systemInstruction }, {text: `\n\nOkay, now considering those instructions, here is the user's latest message:\n${userText}` }] }
+    ];
+
+    // Combine the history and the current turn with embedded instructions
+    const payloadContents = [...conversationHistory];
+    // Update the last user message in the history to include the instruction preamble
+    if (payloadContents.length > 0 && payloadContents[payloadContents.length - 1].role === 'user') {
+         payloadContents[payloadContents.length - 1].parts[0].text = `${systemInstruction}\n\nOkay, now considering those instructions, here is the user's latest message:\n${payloadContents[payloadContents.length - 1].parts[0].text}`;
+    } else {
+        // If history is empty or last message wasn't user, add instruction with current text
+         payloadContents.push({ role: "user", parts: [{ text: `${systemInstruction}\n\nOkay, now considering those instructions, here is the user's latest message:\n${userText}` }] });
+    }
+
 
     const payload = {
-        contents: [
-             // Optional: Inject system prompt if needed, but history usually works
-             // { role: "system", parts: [{text: systemInstruction }] }, // Adjust role if API requires 'system'
-            ...chatHistory
-        ],
+        // Use the modified history for the payload
+        contents: payloadContents,
         safetySettings: [
             { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
             { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
@@ -182,16 +221,17 @@ async function sendMessageToAI(userText) {
             { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" }
         ],
         generationConfig: {
-            temperature: 0.75,
-            maxOutputTokens: 600
+            temperature: 0.7, // Slightly lower temp might help stick to instructions
+            maxOutputTokens: 400 // Reduced slightly as off-topic refusal is short
         }
     };
 
+
     // --- API Key Check ---
-    if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY) {
-         addMessageToDisplay("⚠️ **Action Required:** API Key is missing or is still the placeholder. Please replace `YOUR_API_KEY_GOES_HERE` in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
+    if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY || API_KEY === "AIzaSyDRUdvRQdrIsWDNkYAKt7PyyHrY-bfhESg") { // Added placeholder check
+         addMessageToDisplay("⚠️ **Action Required:** API Key is missing or is still the placeholder. Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
          showTyping(false); // Stop typing indicator
-         return; // Stop execution if key is missing
+         return; // Stop execution if key is missing or placeholder
     }
 
     try {
@@ -215,7 +255,7 @@ async function sendMessageToAI(userText) {
                 errorMsg = "API Key is not valid. Please check the key in `script.js`.";
             }
              if (response.status === 403) {
-                 errorMsg = "API Request Forbidden (403). This might be due to incorrect API key permissions or project setup issues."
+                 errorMsg = "API Request Forbidden (403). This might be due to incorrect API key permissions or project setup issues (Ensure Generative Language API is enabled in your Google Cloud project)."
              }
 
             throw new Error(errorMsg);
@@ -224,18 +264,26 @@ async function sendMessageToAI(userText) {
         const data = await response.json();
 
         let aiResponseText = "Sorry, I had trouble thinking of an idea right now. Could you try rephrasing?";
-        if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
+        // Check for safety blocks first
+        if (data.promptFeedback?.blockReason) {
+             aiResponseText = `I couldn't process that request due to safety guidelines (${data.promptFeedback.blockReason}). Let's stick to gift wrapping! 😊`;
+             console.warn("API request blocked:", data.promptFeedback);
+        } else if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
             aiResponseText = data.candidates[0].content.parts[0].text;
+            // Check if the response itself indicates a safety stop (sometimes happens even without promptFeedback)
+            if (data.candidates[0].finishReason === 'SAFETY') {
+                 aiResponseText = "I cannot provide a response on that topic due to safety guidelines. How about we focus on gift wrapping ideas instead? 🎁";
+                 console.warn("API response generation stopped for safety:", data.candidates[0].finishReason);
+            }
         } else {
             console.warn("Could not find generated text in the expected API response location:", data);
-            if (data.candidates && data.candidates[0]?.finishReason === 'SAFETY') {
-                aiResponseText = "I cannot provide a response to that topic due to safety guidelines. Let's stick to gift wrapping! 😊";
-            } else if (data.promptFeedback?.blockReason) {
-                aiResponseText = `I couldn't process that request (${data.promptFeedback.blockReason}). Could you try asking differently?`;
-            }
+             if (data.candidates && data.candidates[0]?.finishReason && data.candidates[0].finishReason !== 'STOP') {
+                 aiResponseText = `My response generation was stopped unexpectedly (Reason: ${data.candidates[0].finishReason}). Could you try asking differently about gift wrapping?`;
+             }
         }
 
         addMessageToDisplay(aiResponseText, 'ai');
+        // Add the *actual* AI response to history, not the prepended instructions
         chatHistory.push({ role: 'model', parts: [{ text: aiResponseText }] });
 
     } catch (error) {
@@ -254,10 +302,13 @@ function handleSendMessage() {
     }
 
     addMessageToDisplay(userText, 'user');
+    // Add the *clean* user text to history
     chatHistory.push({ role: 'user', parts: [{ text: userText }] });
     userInput.value = ''; // Clear input
 
-    sendMessageToAI(userText); // Send to AI
+    // sendMessageToAI will now use the latest history entry (clean user text)
+    // and prepend the system instruction within the API call logic
+    sendMessageToAI(userText);
 }
 
 // --- Initialization and Event Listeners ---
@@ -298,6 +349,7 @@ showTipsButton.addEventListener('click', () => {
     const text = "Can you give me some general gift wrapping tips?";
     addMessageToDisplay(text, 'user');
     chatHistory.push({ role: 'user', parts: [{ text: text }]});
+    clearInteractiveElements(); // Clear choices if user clicks sidebar button
     sendMessageToAI(text);
 });
 
@@ -306,6 +358,7 @@ inspirationButton.addEventListener('click', () => {
     const text = "Where can I find inspiration for gift wrapping?";
     addMessageToDisplay(text, 'user');
     chatHistory.push({ role: 'user', parts: [{ text: text }]});
+     clearInteractiveElements(); // Clear choices if user clicks sidebar button
     sendMessageToAI(text);
 });
 
@@ -318,9 +371,10 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollToBottom();
 
      // Initial API Key Check (after DOM loaded)
-     if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY) {
+     // Added check for the specific placeholder value too
+     if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY || API_KEY === "AIzaSyDRUdvRQdrIsWDNkYAKt7PyyHrY-bfhESg") {
         setTimeout(() => {
-             addMessageToDisplay("⚠️ **Action Required:** Please replace `YOUR_API_KEY_GOES_HERE` in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
+             addMessageToDisplay("⚠️ **Action Required:** Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
          }, 500);
      }
 });
