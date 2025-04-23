@@ -228,8 +228,8 @@ async function sendMessageToAI(userText) {
 
 
     // --- API Key Check ---
-    if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY || API_KEY === "AIzaSyDRUdvRQdrIAKt7PyyHrY-bfhESg") { // Added placeholder check
-         addMessageToDisplay("⚠️ **Action Required:** API Key is missing or is still the placeholder. Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
+    if (API_KEY === "YOUR_API_KEY_GOES_HERE" || !API_KEY || API_KEY === "AIzaSyDRUAHrY-bfhESg") { // Added placeholder check
+         //addMessageToDisplay("⚠️ **Action Required:** API Key is missing or is still the placeholder. Please replace the placeholder API key in the `script.js` file with your actual Google AI API key for the chat to function. Remember the security warning about exposing keys!", 'ai');
          showTyping(false); // Stop typing indicator
          return; // Stop execution if key is missing or placeholder
     }
